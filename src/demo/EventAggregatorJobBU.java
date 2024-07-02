@@ -1,51 +1,40 @@
 package demo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
-import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.api.common.state.MapState;
+import org.apache.flink.api.common.state.MapStateDescriptor;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaProducer;
 import org.apache.flink.util.Collector;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import  org.apache.flink.api.common.state.MapState;
-import  org.apache.flink.api.common.state.MapStateDescriptor;
-import java.util.*;
-import org.apache.flink.configuration.Configuration;
 
-public class EventAggregatorJob {
+import java.util.*;
+
+public class EventAggregatorJobBU {
 
     public static void main(String[] args) throws Exception {
-        final ParameterTool params = ParameterTool.fromArgs(args);
-
-        final String kafkaBroker = params.getRequired("kafkaBroker");
-        final String inputTopic = params.getRequired("inputTopic");
-        final String outputTopic = params.getRequired("outputTopic");
-        final String requiredKeysStr = params.getRequired("requiredKeys");
-
-        // Convert requiredKeys to Set
-        Set<String> requiredKeys = new HashSet<>(Arrays.asList(requiredKeysStr.split(",")));
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         // Kafka properties
         Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", kafkaBroker);
+        properties.setProperty("bootstrap.servers", "localhost:9092");
         properties.setProperty("group.id", "flink-event-aggregator");
 
-
-
         // Define Kafka consumer
-        FlinkKafkaConsumer<String> consumer = new FlinkKafkaConsumer<>(inputTopic, new SimpleStringSchema(), properties);
+        FlinkKafkaConsumer<String> consumer = new FlinkKafkaConsumer<>("input.samples", new SimpleStringSchema(), properties);
         consumer.setStartFromEarliest();
 
         // demo.Schema definition
 
-        Schema schema = new Schema(requiredKeys);
+        Schema schema = new Schema(new HashSet<>(Arrays.asList("k1", "k2", "k3")));
 
         // Create Kafka producer
         FlinkKafkaProducer<String> producer = new FlinkKafkaProducer<>(
-                outputTopic,
+                "output_topic",
                 new SimpleStringSchema(),
                 properties
         );
