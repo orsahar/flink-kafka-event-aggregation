@@ -98,7 +98,9 @@ public class EventAggregatorJob {
                 for (Map.Entry<String, String> entry : aggregatedState.entries()) {
                     completeEventMap.put(entry.getKey(), entry.getValue());
                 }
-                Event completeEvent = new Event(aggregatedState.get("key"), completeEventMap);
+                String key = completeEventMap.get("key");
+                completeEventMap.remove("key");
+                Event completeEvent = new Event(key, completeEventMap);
                 collector.collect(completeEvent);
                 aggregatedState.clear();
             }
