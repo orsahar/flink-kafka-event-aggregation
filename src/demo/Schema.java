@@ -13,7 +13,7 @@ public class Schema implements Serializable {
 
     public Schema(Set<String> keys) {
         this.keys = keys;
-        this.requiredKeys = requiredKeys;
+        this.requiredKeys = keys;
 
     }
 

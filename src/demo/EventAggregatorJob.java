@@ -24,7 +24,7 @@ public class EventAggregatorJob {
         properties.setProperty("group.id", "flink-event-aggregator");
 
         // Define Kafka consumer
-        FlinkKafkaConsumer<String> consumer = new FlinkKafkaConsumer<>("input_topic", new SimpleStringSchema(), properties);
+        FlinkKafkaConsumer<String> consumer = new FlinkKafkaConsumer<>("input.samples", new SimpleStringSchema(), properties);
         consumer.setStartFromEarliest();
 
         // demo.Schema definition
@@ -44,6 +44,7 @@ public class EventAggregatorJob {
         stream
                 .map(value -> {
                     ObjectMapper mapper = new ObjectMapper();
+
                     return mapper.readValue(value, Event.class);
                 })
                 .keyBy(event -> event.key)
