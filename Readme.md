@@ -8,10 +8,11 @@ This is a demo project that uses Apache Flink to consume events from a Kafka top
 2. [Requirements](#requirements)
 3. [Setup](#setup)
 4. [Usage](#usage)
-5. [Components](#components)
-6. [An Example](#an-example)
-7. [Future Improvements](#future-improvements)
-8. [License](#license)
+5. [Build](#build)
+6. [Components](#components)
+7. [An Example](#an-example)
+8. [Future Improvements](#future-improvements)
+9. [License](#license)
 
 ## Introduction
 
@@ -61,6 +62,8 @@ flink run -c demo.EventAggregatorJob <path_to_jar>
 - `<input_topic>`: Topic name to consume events from.
 - `<output_topic>`: Topic name to produce aggregated events to.
 - `<comma_separated_required_keys>`: List of keys required for event aggregation, separated by commas.
+## Build
+``` mvn clean package```
 
 ## Components
 
