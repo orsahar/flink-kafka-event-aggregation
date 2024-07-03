@@ -105,5 +105,5 @@ Let's consider an example where you want to aggregate events with required keys 
 ## License
 
 This project is licensed under the MIT License.
-```
+
 
